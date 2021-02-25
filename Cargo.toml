@@ -1,0 +1,15 @@
+[package]
+name = "circular-buffer-with-speculate"
+version = "0.1.0"
+authors = ["philip.a.markgraf <philip_markgraf@mac.com>"]
+edition = "2018"
+
+publish = false
+include = ["src/*.rs"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[dev-dependencies]
+speculate = "0.1"
