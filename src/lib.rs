@@ -10,7 +10,10 @@ impl CircularBuffer {
     pub fn empty(&self) -> bool { true }
     pub fn full(&self) -> bool { self.capacity == 0 }
     pub fn get(&self) -> Result<i32, ()> { Err(()) }
-    pub fn put(&self, _: i32) -> Result<(), ()> { Err(()) }
+    pub fn put(&self, _: i32) -> Result<(), ()> {
+        if self.full() { return Err(()); }
+        Ok(())
+    }
 }
 
 use demonstrate::demonstrate;
@@ -66,5 +69,12 @@ demonstrate! {
         it "is not full" {
             assert_false!(b.full());
         }
+        it "get fails with pre-set bad value" {
+            assert_eq!(Err(()), b.get());
+        }
+        it "put succeeds" {
+            assert_eq!(Ok(()), b.put(42));
+        }
+
     }
 }
