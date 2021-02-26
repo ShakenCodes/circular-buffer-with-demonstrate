@@ -1,5 +1,5 @@
 /*
- *   Copyright (c) 2021 
+ *   Copyright (c) 2021 Shaken Codes (Philip A. Markgraf)
  *   All rights reserved.
  */
 pub struct CircularBuffer {
@@ -11,9 +11,6 @@ impl CircularBuffer {
     pub fn full(&self) -> bool { true }
     pub fn put(&self, _: i32) -> bool { false }
 }
-
-#[cfg(test)]
-// extern crate demonstrate;
 
 #[cfg(test)]
 use all_asserts::*;
