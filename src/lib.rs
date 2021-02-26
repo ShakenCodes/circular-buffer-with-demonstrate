@@ -9,8 +9,8 @@ impl CircularBuffer {
     pub fn new(capacity: usize) -> Self { Self{ capacity } }
     pub fn empty(&self) -> bool { true }
     pub fn full(&self) -> bool { self.capacity == 0 }
-    pub fn put(&self, _: i32) -> Result<(), ()> { Err(()) }
     pub fn get(&self) -> Result<i32, ()> { Err(()) }
+    pub fn put(&self, _: i32) -> Result<(), ()> { Err(()) }
 }
 
 use demonstrate::demonstrate;
@@ -29,11 +29,11 @@ demonstrate! {
         it "is full" {
             assert_true!(b.full());
         }
-        it "put fails with false" {
-            assert_eq!(Err(()), b.put(42));
-        }
         it "get fails with pre-set bad value" {
             assert_eq!(Err(()), b.get());
+        }
+        it "put fails with false" {
+            assert_eq!(Err(()), b.put(42));
         }
 
         describe ", after put attempt" {
@@ -47,11 +47,11 @@ demonstrate! {
             it "is full" {
                 assert_true!(b.full());
             }
-            it "put fails with false" {
-                assert_eq!(Err(()), b.put(42));
-            }
             it "get fails with pre-set bad value" {
                 assert_eq!(Err(()), b.get());
+            }
+            it "put fails with false" {
+                assert_eq!(Err(()), b.put(42));
             }
         }
     }
