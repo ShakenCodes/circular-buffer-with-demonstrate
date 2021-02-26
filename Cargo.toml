@@ -1,5 +1,5 @@
 [package]
-name = "circular-buffer-with-speculate"
+name = "circular-buffer-with-demonstrate"
 version = "0.1.0"
 authors = ["philip.a.markgraf <philip_markgraf@mac.com>"]
 edition = "2018"
