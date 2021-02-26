@@ -3,11 +3,12 @@
  *   All rights reserved.
  */
 pub struct CircularBuffer {
+    capacity: usize,
 }
 impl CircularBuffer {
-    pub fn new(_: usize) -> Self { Self{ } }
+    pub fn new(capacity: usize) -> Self { Self{ capacity } }
     pub fn empty(&self) -> bool { true }
-    pub fn full(&self) -> bool { true }
+    pub fn full(&self) -> bool { self.capacity == 0 }
     pub fn put(&self, _: i32) -> Result<(), ()> { Err(()) }
     pub fn get(&self) -> Result<i32, ()> { Err(()) }
 }
@@ -61,6 +62,9 @@ demonstrate! {
         }
         it "is empty" {
             assert_true!(b.empty());
+        }
+        it "is not full" {
+            assert_false!(b.full());
         }
     }
 }
