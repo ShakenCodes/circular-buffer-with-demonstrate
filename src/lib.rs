@@ -4,14 +4,27 @@
  */
 pub struct CircularBuffer {
     capacity: usize,
+    index: usize,
+    value: i32,
 }
 impl CircularBuffer {
-    pub fn new(capacity: usize) -> Self { Self{ capacity } }
+    pub fn new(capacity: usize) -> Self {
+        Self{
+            capacity,
+            index: 0,
+            value: i32::MIN
+        }
+    }
     pub fn empty(&self) -> bool { true }
     pub fn full(&self) -> bool { self.capacity == 0 }
-    pub fn get(&self) -> Result<i32, ()> { Err(()) }
-    pub fn put(&self, _: i32) -> Result<(), ()> {
+    pub fn get(&self) -> Result<i32, ()> {
+        if self.index == 0 { return Err(()); }
+        Ok(self.value)
+     }
+    pub fn put(&mut self, v: i32) -> Result<(), ()> {
         if self.full() { return Err(()); }
+        self.value = v;
+        self.index += 1;
         Ok(())
     }
 }
@@ -24,7 +37,8 @@ demonstrate! {
     describe "given a buffer of capacity zero" {       
         use super::*;
         before {
-            let b = CircularBuffer::new(0);
+            #[allow(unused_mut)]
+            let mut b = CircularBuffer::new(0);
         }
         it "is empty" {
             assert_true!(b.empty());
@@ -61,7 +75,8 @@ demonstrate! {
     describe "given a buffer of capacity one" {       
         use super::*;
         before {
-            let b = CircularBuffer::new(1);
+            #[allow(unused_mut)]
+            let mut b = CircularBuffer::new(1);
         }
         it "is empty" {
             assert_true!(b.empty());
@@ -76,5 +91,14 @@ demonstrate! {
             assert_eq!(Ok(()), b.put(42));
         }
 
+        describe "and one item put," {
+            before {
+                let item = 111;
+                assert_eq!(Ok(()), b.put(item));
+            }
+            it "get retrives the item previously put" {
+                assert_eq!(item, b.get().unwrap());
+            }
+        }
     }
 }
