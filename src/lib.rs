@@ -7,7 +7,7 @@ pub struct CircularBuffer {
 }
 impl CircularBuffer {
     pub fn new(_: usize) -> Self { Self{} }
-    pub fn is_empty(&self) -> bool { true }
+    pub fn empty(&self) -> bool { true }
 }
 
 #[cfg(test)]
@@ -21,8 +21,8 @@ mod tests {
             before {
                 let buf = CircularBuffer::new(0);
             }
-            it "when created, is_empty() is true" {
-                assert_eq!(true, buf.is_empty());
+            it "is empty" {
+                assert_eq!(true, buf.empty());
             }
         }
     }
