@@ -54,4 +54,13 @@ demonstrate! {
             }
         }
     }
+    describe "given a buffer of capacity one" {       
+        use super::*;
+        before {
+            let b = CircularBuffer::new(1);
+        }
+        it "is empty" {
+            assert_true!(b.empty());
+        }
+    }
 }
