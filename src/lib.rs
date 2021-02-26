@@ -9,26 +9,31 @@ impl CircularBuffer {
     pub fn new(_: usize) -> Self { Self{} }
     pub fn empty(&self) -> bool { true }
     pub fn full(&self) -> bool { true }
+    pub fn put(&self, _: i32) -> bool { false }
 }
 
 #[cfg(test)]
-extern crate speculate;
+// extern crate demonstrate;
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    speculate! {
-        describe "given a buffer of capacity zero" {
-            before {
-                let buf = CircularBuffer::new(0);
-            }
-            it "is empty" {
-                assert_eq!(true, buf.empty());
-            }
-            it "is full" {
-                assert_eq!(true, buf.full());
-            }
+use all_asserts::*;
+
+use demonstrate::demonstrate;
+
+demonstrate! {
+    describe "given a buffer of capacity zero" {       
+        use super::*;
+        before {
+            let b = CircularBuffer::new(0);
+        }
+        it "is empty" {
+            assert_true!(b.empty());
+        }
+        it "is full" {
+            assert_true!(b.full());
+        }
+        it "put fails with false" {
+            assert_false!(b.put(42));
         }
     }
-    use speculate::speculate;
 }
