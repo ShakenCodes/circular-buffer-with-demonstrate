@@ -123,4 +123,20 @@ demonstrate! {
             }
         }
     }
+    describe "given a buffer of capacity two" {       
+        use super::*;
+        before {
+            #[allow(unused_mut)]
+            let mut b = CircularBuffer::new(2);
+        }
+        it "is empty" {
+            assert_true!(b.empty());
+        }
+        it "is not full" {
+            assert_false!(b.full());
+        }
+        it "get yields error" {
+            assert_eq!(Err(()), b.get());
+        }
+    }
 }
