@@ -15,10 +15,15 @@ impl CircularBuffer {
             value: i32::MIN
         }
     }
-    pub fn empty(&self) -> bool { true }
-    pub fn full(&self) -> bool { self.capacity == 0 }
-    pub fn get(&self) -> Result<i32, ()> {
+    pub fn empty(&self) -> bool {
+        self.index == 0
+    }
+    pub fn full(&self) -> bool {
+        self.capacity == self.index
+    }
+    pub fn get(&mut self) -> Result<i32, ()> {
         if self.index == 0 { return Err(()); }
+        self.index -= 1;
         Ok(self.value)
      }
     pub fn put(&mut self, v: i32) -> Result<(), ()> {
@@ -46,10 +51,10 @@ demonstrate! {
         it "is full" {
             assert_true!(b.full());
         }
-        it "get fails with pre-set bad value" {
+        it "get yields an error" {
             assert_eq!(Err(()), b.get());
         }
-        it "put fails with false" {
+        it "put yields an error" {
             assert_eq!(Err(()), b.put(42));
         }
 
@@ -57,18 +62,11 @@ demonstrate! {
             before {
                 assert_eq!(Err(()), b.put(-1));
             }
-
             it "is empty" {
                 assert_true!(b.empty());
             }
             it "is full" {
                 assert_true!(b.full());
-            }
-            it "get fails with pre-set bad value" {
-                assert_eq!(Err(()), b.get());
-            }
-            it "put fails with false" {
-                assert_eq!(Err(()), b.put(42));
             }
         }
     }
@@ -84,7 +82,7 @@ demonstrate! {
         it "is not full" {
             assert_false!(b.full());
         }
-        it "get fails with pre-set bad value" {
+        it "get yields error" {
             assert_eq!(Err(()), b.get());
         }
         it "put succeeds" {
@@ -96,8 +94,32 @@ demonstrate! {
                 let item = 111;
                 assert_eq!(Ok(()), b.put(item));
             }
+            it "is not empty" {
+                assert_false!(b.empty());
+            }
+            it "is full" {
+                assert_true!(b.full());
+            }
             it "get retrives the item previously put" {
                 assert_eq!(item, b.get().unwrap());
+            }
+
+            describe "and then get once, " {
+                before {
+                    let _ = b.get();
+                }
+                it "is empty" {
+                    assert_true!(b.empty());
+                }
+                it "is not full" {
+                    assert_false!(b.full());
+                }
+                it "get yields error" {
+                    assert_eq!(Err(()), b.get());
+                }
+                it "put succeeds" {
+                    assert_eq!(Ok(()), b.put(42));
+                }
             }
         }
     }
