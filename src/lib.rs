@@ -4,32 +4,39 @@
  */
 pub struct CircularBuffer {
     capacity: usize,
-    index: usize,
-    value: i32,
+    count: usize,
+    input: usize,
+    output: usize,
+    values: [i32; 2],
 }
 impl CircularBuffer {
     pub fn new(capacity: usize) -> Self {
         Self{
             capacity,
-            index: 0,
-            value: i32::MIN
+            count: 0,
+            input: 0,
+            output: 0,
+            values: [i32::MIN; 2],
         }
     }
     pub fn empty(&self) -> bool {
-        self.index == 0
+        self.count == 0
     }
     pub fn full(&self) -> bool {
-        self.capacity == self.index
+        self.capacity == self.count
     }
     pub fn get(&mut self) -> Result<i32, ()> {
-        if self.index == 0 { return Err(()); }
-        self.index -= 1;
-        Ok(self.value)
+        if self.empty() { return Err(()); }
+        let v = self.values[self.output];
+        self.output += 1;
+        self.count -= 1;
+        Ok(v)
      }
     pub fn put(&mut self, v: i32) -> Result<(), ()> {
         if self.full() { return Err(()); }
-        self.value = v;
-        self.index += 1;
+        self.values[self.input] = v;
+        self.input += 1;
+        self.count += 1;
         Ok(())
     }
 }
@@ -159,6 +166,26 @@ demonstrate! {
             it "put succeeds" {
                 assert_eq!(Ok(()), b.put(42));
             }
+            describe "when second item added" {
+                before {
+                    #[allow(unused)]
+                    let second = -11;
+                    let _ = b.put(second);
+                }
+                it "is not empty" {
+                    assert_false!(b.empty());
+                }
+                it "is full" {
+                    assert_true!(b.full());
+                }
+                it "get retrieve put values" {
+                    assert_eq!(Ok(first), b.get());
+                    assert_eq!(Ok(second), b.get());
+                }
+                it "put yields an error" {
+                    assert_eq!(Err(()), b.put(42));
+                }        
             }
+        }
     }
 }
