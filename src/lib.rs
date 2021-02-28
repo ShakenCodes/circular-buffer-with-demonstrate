@@ -29,6 +29,7 @@ impl CircularBuffer {
         if self.empty() { return Err(()); }
         let v = self.values[self.output];
         self.output += 1;
+        if self.output >= self.capacity { self.output = 0; }
         self.count -= 1;
         Ok(v)
      }
@@ -36,6 +37,7 @@ impl CircularBuffer {
         if self.full() { return Err(()); }
         self.values[self.input] = v;
         self.input += 1;
+        if self.input >= self.capacity { self.input = 0; }
         self.count += 1;
         Ok(())
     }
@@ -185,6 +187,13 @@ demonstrate! {
                 it "put yields an error" {
                     assert_eq!(Err(()), b.put(42));
                 }        
+                it "retrieve once, add two, retrieve remaining values" {
+                    assert_eq!(Ok(first), b.get());
+                    let third = 10101;
+                    assert_eq!(Ok(()), b.put(third));
+                    assert_eq!(Ok(second), b.get());
+                    assert_eq!(Ok(third), b.get());
+                }
             }
         }
     }
