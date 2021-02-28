@@ -138,5 +138,27 @@ demonstrate! {
         it "get yields error" {
             assert_eq!(Err(()), b.get());
         }
+        it "put succeeds" {
+            assert_eq!(Ok(()), b.put(42));
+        }
+        describe "when one item added" {
+            before {
+                #[allow(unused)]
+                let first = 43;
+                let _ = b.put(first);
+            }
+            it "is not empty" {
+                assert_false!(b.empty());
+            }
+            it "is not full" {
+                assert_false!(b.full());
+            }
+            it "get retrieve put value" {
+                assert_eq!(Ok(first), b.get());
+            }
+            it "put succeeds" {
+                assert_eq!(Ok(()), b.put(42));
+            }
+            }
     }
 }
