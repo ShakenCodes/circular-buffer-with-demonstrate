@@ -28,18 +28,20 @@ impl CircularBuffer {
     pub fn get(&mut self) -> Result<i32, ()> {
         if self.empty() { return Err(()); }
         let v = self.values[self.output];
-        self.output += 1;
-        if self.output >= self.capacity { self.output = 0; }
+        self.output = CircularBuffer::increment_and_clip(self.output, self.capacity);
         self.count -= 1;
         Ok(v)
      }
     pub fn put(&mut self, v: i32) -> Result<(), ()> {
         if self.full() { return Err(()); }
         self.values[self.input] = v;
-        self.input += 1;
-        if self.input >= self.capacity { self.input = 0; }
+        self.input = CircularBuffer::increment_and_clip(self.input, self.capacity);
         self.count += 1;
         Ok(())
+    }
+    fn increment_and_clip(n: usize, c: usize) -> usize {
+        if (n + 1) < c { return n + 1; }
+        0
     }
 }
 
