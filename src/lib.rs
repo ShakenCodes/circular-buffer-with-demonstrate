@@ -199,4 +199,68 @@ demonstrate! {
             }
         }
     }
+    describe "given a buffer of capacity three" {       
+        use super::*;
+        before {
+            #[allow(unused_mut)]
+            let mut b = CircularBuffer::new(3);
+        }
+        it "is empty" {
+            assert_true!(b.empty());
+        }
+        it "is not full" {
+            assert_false!(b.full());
+        }
+        it "get yields error" {
+            assert_eq!(Err(()), b.get());
+        }
+        it "put succeeds" {
+            assert_eq!(Ok(()), b.put(42));
+        }
+        describe "when three items added" {
+            before {
+                #[allow(unused)]
+                let first = 43;
+                let _ = b.put(first);
+                #[allow(unused)]
+                let second = -11;
+                let _ = b.put(second);
+                #[allow(unused)]
+                let third = 77;
+                let _ = b.put(third);
+            }
+            it "is not empty" {
+                assert_false!(b.empty());
+            }
+            it "is full" {
+                assert_true!(b.full());
+            }
+            it "get retrieve put value" {
+                assert_eq!(Ok(first), b.get());
+            }
+            describe "when one item removed" {
+                before {
+                    let _ = b.get();
+                }
+                it "is not empty" {
+                    assert_false!(b.empty());
+                }
+                it "is not full" {
+                    assert_false!(b.full());
+                }
+                describe "when one more item added" {
+                    before {
+                        #[allow(unused)]
+                        let third = 77;
+                        let _ = b.put(third);
+                    }
+                    it "get retrieve put values" {
+                        assert_eq!(Ok(second), b.get());
+                        assert_eq!(Ok(third), b.get());
+                        assert_eq!(Ok(third), b.get());
+                    }
+                }
+            }
+        }
+    }
 }
