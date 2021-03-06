@@ -7,7 +7,7 @@ pub struct CircularBuffer {
     count: usize,
     input: usize,
     output: usize,
-    values: [i32; 2],
+    values: Vec<i32>,
 }
 impl CircularBuffer {
     pub fn new(capacity: usize) -> Self {
@@ -16,7 +16,7 @@ impl CircularBuffer {
             count: 0,
             input: 0,
             output: 0,
-            values: [i32::MIN; 2],
+            values: vec![i32::MIN; capacity],
         }
     }
     pub fn empty(&self) -> bool {
